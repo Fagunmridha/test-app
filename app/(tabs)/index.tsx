@@ -1,75 +1,163 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { BookCard } from "@/components/BookCard";
+import { BottomNav } from "@/components/BottomNav";
+import { CategoryPills } from "@/components/CategoryPills";
+import { HeaderSection } from "@/components/HeaderSection";
+import { Box } from "@/components/ui/Box";
+import { Text } from "@/components/ui/Text";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useSearchStore } from "@/store/search";
+import { Theme } from "@/theme/theme";
+import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "@shopify/restyle";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useRef } from "react";
+import { ScrollView, TextInput, TouchableOpacity } from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// 📚 Fetch books
+const fetchBooks = async (search: string, page: number) => {
+  const res = await axios.get("https://gutendex.com/books", {
+    params: { search, page },
+  });
+  return res.data;
+};
 
 export default function HomeScreen() {
+  const theme = useTheme<Theme>();
+  const { search: q, page: pg } = useLocalSearchParams();
+  const router = useRouter();
+
+  const { search, setSearch, page, setPage } = useSearchStore();
+  const debouncedSearch = useDebounce(search, 400);
+  const didMountRef = useRef(false); // Prevent initial router.setParams()
+
+  // 🔁 Sync URL to Zustand on mount
+  useEffect(() => {
+    if (typeof q === "string") setSearch(q);
+    if (typeof pg === "string") setPage(parseInt(pg));
+  }, []);
+
+  // 🔁 Sync Zustand to URL after first render
+  useEffect(() => {
+    if (didMountRef.current) {
+      router.setParams({ search, page: String(page) });
+    } else {
+      didMountRef.current = true;
+    }
+  }, [search, page]);
+
+  // 📦 Query books
+  const { data, isLoading } = useQuery({
+    queryKey: ["books", debouncedSearch, page],
+    queryFn: () => fetchBooks(debouncedSearch, page),
+  });
+
+  const books = data?.results || [];
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{ paddingBottom: 80 }}
+    >
+      {/* 🔍 Search Input */}
+      <Box px="m" pt="l">
+        <Box
+          backgroundColor="background"
+          flexDirection="row"
+          alignItems="center"
+          borderRadius="m"
+          paddingHorizontal="m"
+        >
+          <Ionicons name="search" size={20} color={theme.colors.iconGray} />
+          <TextInput
+            placeholder="Search books..."
+            placeholderTextColor={theme.colors.textLight}
+            value={search}
+            onChangeText={setSearch}
+            style={{
+              flex: 1,
+              paddingVertical: 10,
+              marginLeft: 8,
+              color: theme.colors.text,
+            }}
+          />
+        </Box>
+      </Box>
+
+      {/* 🏷️ Categories */}
+      <Box mt="m" px="m">
+        <CategoryPills />
+      </Box>
+
+      {/* ⭐ Popular */}
+      <HeaderSection title="Popular" />
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ paddingLeft: 16 }}
+      >
+        {books.slice(0, 5).map((book: any) => (
+          <BookCard
+            key={book.id}
+            book={book}
+            onPress={() => router.push(`/books/${book.id}`)}
+          />
+        ))}
+      </ScrollView>
+
+      {/* 🔥 Trending */}
+      <HeaderSection title="Trending" />
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ paddingLeft: 16 }}
+      >
+        {books.slice(5, 10).map((book: any) => (
+          <BookCard
+            key={book.id}
+            book={book}
+            onPress={() => router.push(`/books/${book.id}`)}
+          />
+        ))}
+      </ScrollView>
+
+      {/* 🔁 Pagination */}
+      <Box
+        mt="l"
+        mb="l"
+        flexDirection="row"
+        justifyContent="space-evenly"
+        alignItems="center"
+      >
+        <TouchableOpacity
+          onPress={() => setPage(Math.max(1, page - 1))}
+          style={{
+            backgroundColor: theme.colors.border,
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            borderRadius: 8,
+          }}
+        >
+          <Text>Previous</Text>
+        </TouchableOpacity>
+
+        <Text>Page {page}</Text>
+
+        <TouchableOpacity
+          onPress={() => setPage(page + 1)}
+          style={{
+            backgroundColor: theme.colors.border,
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            borderRadius: 8,
+          }}
+        >
+          <Text>Next</Text>
+        </TouchableOpacity>
+      </Box>
+
+      <BottomNav />
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
