@@ -13,9 +13,9 @@ export function SearchBar() {
   useEffect(() => {
     const encoded = encodeURIComponent(debounced.trim());
     if (encoded) {
-      router.replace({ pathname: "/", query: { search: encoded, page: "1" } });
+      router.replace({ pathname: "/", query: { search: encoded } });
     }
-  }, [debounced]);
+  }, [debounced, router]);
 
   return (
     <Box padding="m" borderBottomWidth={1} borderColor="border">

@@ -6,16 +6,13 @@ import { Platform } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
-import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "blue",
-        tabBarInactiveTintColor: "red",
+        tabBarInactiveTintColor: "gray",
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
@@ -43,6 +40,24 @@ export default function TabLayout() {
           title: "Favorites",
           tabBarIcon: ({ color }) => (
             <Ionicons name="heart-sharp" size={28} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="library"
+        options={{
+          title: "Library",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="library" size={28} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="account"
+        options={{
+          title: "Account",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="person" size={28} color={color} />
           ),
         }}
       />

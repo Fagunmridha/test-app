@@ -1,9 +1,16 @@
 const API = "https://gutendex.com/books";
 
-export const fetchBooks = async (search: string, page: number = 1) => {
-  const res = await fetch(`${API}?search=${search}&page=${page}`);
+export const fetchBooks = async ({ pageParam = 1, search = "" }: { pageParam?: number; search?: string }) => {
+  const res = await fetch(`${API}?search=${search}&page=${pageParam}`);
   if (!res.ok) throw new Error("Failed to fetch books");
-  return res.json();
+  const data = await res.json();
+  
+  return {
+    results: data.results,
+    nextPage: pageParam + 1,
+    totalPages: Math.ceil(data.count / 32),
+    hasMore: pageParam < Math.ceil(data.count / 32),
+  };
 };
 
 export const fetchBookDetails = async (id: string) => {

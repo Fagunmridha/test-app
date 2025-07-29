@@ -11,9 +11,7 @@ export const BookCard = ({
 }) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <Box 
-        mr="m" 
-        width={120}
+      <Box
         backgroundColor="cardBackground"
         borderRadius="m"
         padding="s"
@@ -22,34 +20,28 @@ export const BookCard = ({
         shadowOpacity={0.1}
         shadowRadius={4}
         elevation={2}
+        width="100%"
+        height={260}
       >
         <Image
           source={{
             uri:
               book.formats["image/jpeg"] || "https://via.placeholder.com/120",
           }}
-          style={{ 
-            width: 104, 
-            height: 156, 
+          style={{
+            width: "100%",
+            height: 160,
             borderRadius: 8,
-            marginBottom: 8
+            marginBottom: 8,
+            resizeMode: "cover",
           }}
         />
-        <Text 
-          numberOfLines={2} 
-          variant="bookTitle"
-          textAlign="center"
-        >
+        <Text numberOfLines={2} variant="bookTitle" textAlign="center">
           {book.title}
         </Text>
-        <Text 
-          numberOfLines={1} 
-          variant="bookAuthor" 
-          mt="xs"
-          textAlign="center"
-        >
-          {book.authors && book.authors.length > 0 
-            ? book.authors[0].name 
+        <Text numberOfLines={1} variant="bookAuthor" mt="xs" textAlign="center">
+          {book.authors && book.authors.length > 0
+            ? book.authors[0].name
             : "Unknown"}
         </Text>
       </Box>
