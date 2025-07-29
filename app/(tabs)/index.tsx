@@ -1,5 +1,4 @@
 import { BookCard } from "@/components/BookCard";
-import { BottomNav } from "@/components/BottomNav";
 import { CategoryPills } from "@/components/CategoryPills";
 import { HeaderSection } from "@/components/HeaderSection";
 import { Box } from "@/components/ui/Box";
@@ -157,7 +156,7 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </Box>
 
-      <BottomNav />
+      {/* <BottomNav /> */}
     </ScrollView>
   );
 }
