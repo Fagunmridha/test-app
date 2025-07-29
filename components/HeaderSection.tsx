@@ -17,12 +17,12 @@ export const HeaderSection = ({ title, onPress, containerStyle }: Props) => {
       style={containerStyle}
       mb="s"
     >
-      <Text fontWeight="bold" fontSize={18}>
+      <Text variant="subheader" color="text">
         {title}
       </Text>
       {onPress && (
         <TouchableOpacity onPress={onPress}>
-          <Text color="primary">View All</Text>
+          <Text color="primary" fontWeight="600">View All</Text>
         </TouchableOpacity>
       )}
     </Box>
