@@ -20,7 +20,7 @@ export const BookCard = ({
         shadowOpacity={0.1}
         shadowRadius={4}
         elevation={2}
-        width="100%"
+        width={160}
         height={260}
       >
         <Image
@@ -29,8 +29,8 @@ export const BookCard = ({
               book.formats["image/jpeg"] || "https://via.placeholder.com/120",
           }}
           style={{
-            width: "100%",
-            height: 160,
+            width: 150,
+            height: 200,
             borderRadius: 8,
             marginBottom: 8,
             resizeMode: "cover",
