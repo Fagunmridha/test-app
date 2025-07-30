@@ -1,5 +1,5 @@
 import { Box } from "@/components/ui/Box";
-import { Button } from "@/components/ui/Button"; // নিজের তৈরি বাটন
+import { Button } from "@/components/ui/Button";
 import { Text } from "@/components/ui/Text";
 import React, { useState } from "react";
 import { ScrollView, TextInput } from "react-native";

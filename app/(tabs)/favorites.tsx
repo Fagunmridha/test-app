@@ -18,13 +18,6 @@ export default function FavoritesScreen() {
 
   return (
     <Box flex={1} bg="background" p="m">
-      {/* Back Button */}
-      <TouchableOpacity onPress={() => router.back()}>
-        <Text variant="subheader" mb="s">
-          ← Back
-        </Text>
-      </TouchableOpacity>
-
       {/* Header */}
       <Text variant="header" mb="m">
         📚 Favorite Books
