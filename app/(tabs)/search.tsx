@@ -249,7 +249,7 @@ export default function SearchScreen() {
               justifyContent="space-between"
             >
               <Text color="textLight" variant="caption">
-                পাওয়া গেছে{" "}
+                Find book
                 {data?.pages[0]?.totalPages
                   ? `${books.length}+ result`
                   : `${books.length} result`}
