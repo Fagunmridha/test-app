@@ -1,33 +1,30 @@
 import { createTheme } from "@shopify/restyle";
 
-// 🌞 লাইট থিম
 export const lightTheme = createTheme({
   colors: {
-    // 🔲 ব্যাকগ্রাউন্ড
     background: "#f5f5f5",
     backgroundPink: "#fce7f3",
     backgroundGradient: "#f9fafb",
+    popularBackground: "#FAF0EA",
 
-    // 🔤 টেক্সট কালার
     text: "#1f2937",
+    textId: "#B4952F",
+    textTitle: "#FBFAF1",
     textLight: "#6b7280",
     textMuted: "#9ca3af",
     textDark: "#111827",
 
-    // 🎨 ব্র্যান্ড কালার
-    primary: "#ec4899", // গোলাপি
+    primary: "#ec4899",
     primaryLight: "#f9a8d4",
-    secondary: "#8b5cf6", // পার্পল
+    secondary: "#8b5cf6",
     orange: "#F97316",
 
-    // 📚 ক্যাটাগরি কালার
     categoryRomance: "#fce7f3",
     categoryHistory: "#dbeafe",
     categoryMystery: "#e9d5ff",
     categorySpiritual: "#fef3c7",
     categoryFantasy: "#d1fae5",
 
-    // 📘 বুক কভার গ্র্যাডিয়েন্ট
     bookTeal: "#14b8a6",
     bookTealDark: "#0d9488",
     bookYellow: "#f59e0b",
@@ -37,7 +34,6 @@ export const lightTheme = createTheme({
     bookPink: "#ec4899",
     bookGreen: "#10b981",
 
-    // 🧱 UI এলিমেন্টস
     cardBackground: "#ffffff",
     inputBackground: "#f3f4f6",
     buttonBackground: "#ec4899",
@@ -46,12 +42,10 @@ export const lightTheme = createTheme({
     border: "#e5e7eb",
     borderLight: "#f3f4f6",
 
-    // 🟢 স্টেট কালার
     success: "#10b981",
     warning: "#f59e0b",
     error: "#ef4444",
 
-    // 🎯 আইকন কালার
     iconGray: "#6b7280",
     iconLight: "#9ca3af",
   },
@@ -180,7 +174,6 @@ export const lightTheme = createTheme({
   },
 });
 
-// 🌙 ডার্ক থিম
 export const darkTheme = createTheme({
   ...lightTheme,
   colors: {

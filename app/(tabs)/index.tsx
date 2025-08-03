@@ -34,6 +34,7 @@ const fetchBooks = async ({
   const res = await axios.get("https://gutendex.com/books", {
     params: { search, page: pageParam },
   });
+
   return {
     results: res.data.results,
     nextPage: pageParam + 1,
@@ -46,6 +47,7 @@ const fetchEditorsPicks = async (): Promise<Book[]> => {
   const res = await axios.get("https://gutendex.com/books", {
     params: { page: 1 },
   });
+
   return res.data.results.slice(0, 10);
 };
 
@@ -53,8 +55,10 @@ const fetchTrendingBooks = async (): Promise<Book[]> => {
   const res = await axios.get("https://gutendex.com/books", {
     params: { page: 1 },
   });
+
   return res.data.results.slice(10, 20);
 };
+console.log("hi");
 
 export default function HomeScreen() {
   const theme = useTheme<Theme>();

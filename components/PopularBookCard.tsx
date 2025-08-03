@@ -11,7 +11,7 @@ export const PopularBookCard = ({ book }: { book: any }) => {
 
   return (
     <Box
-      backgroundColor="cardBackground"
+      backgroundColor="popularBackground"
       borderRadius="xl"
       padding="m"
       flexDirection="row"
@@ -27,14 +27,14 @@ export const PopularBookCard = ({ book }: { book: any }) => {
     >
       <Box flex={1} mr="m">
         <Box
-          backgroundColor="primary"
+          backgroundColor="textTitle"
           borderRadius="l"
           paddingHorizontal="s"
           paddingVertical="xs"
           alignSelf="flex-start"
           mb="s"
         >
-          <Text variant="bookTitle" color="textLight">
+          <Text variant="bookTitle" color="textId">
             🌟 Popular
           </Text>
         </Box>

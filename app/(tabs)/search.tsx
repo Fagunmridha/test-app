@@ -1,10 +1,3 @@
-// search.tsx
-import { BookCard } from "@/components/BookCard";
-import { Box } from "@/components/ui/Box";
-import { Text } from "@/components/ui/Text";
-import { useDebounce } from "@/hooks/useDebounce";
-import { useSearchStore } from "@/store/search";
-import { Theme } from "@/theme/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@shopify/restyle";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -12,6 +5,13 @@ import axios from "axios";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import { ActivityIndicator, FlatList, TextInput } from "react-native";
+
+import { BookCard } from "@/components/BookCard";
+import { Box } from "@/components/ui/Box";
+import { Text } from "@/components/ui/Text";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useSearchStore } from "@/store/search";
+import { Theme } from "@/theme/theme";
 
 const fetchBooks = async ({ pageParam = 1, search = "" }) => {
   const res = await axios.get("https://gutendex.com/books", {
@@ -45,21 +45,15 @@ export default function SearchScreen() {
     }
   }, [search, router]);
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    refetch,
-  } = useInfiniteQuery({
-    queryKey: ["search-books", debouncedSearch],
-    queryFn: ({ pageParam = 1 }) =>
-      fetchBooks({ pageParam, search: debouncedSearch }),
-    getNextPageParam: (lastPage) =>
-      lastPage.hasMore ? lastPage.nextPage : undefined,
-    enabled: debouncedSearch.length > 0,
-  });
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteQuery({
+      queryKey: ["search-books", debouncedSearch],
+      queryFn: ({ pageParam = 1 }) =>
+        fetchBooks({ pageParam, search: debouncedSearch }),
+      getNextPageParam: (lastPage) =>
+        lastPage.hasMore ? lastPage.nextPage : undefined,
+      enabled: debouncedSearch.length > 0,
+    });
 
   const books = data?.pages.flatMap((page) => page.results) ?? [];
 
@@ -74,7 +68,7 @@ export default function SearchScreen() {
       <Box py="xl" alignItems="center">
         <ActivityIndicator size="large" color={theme.colors.primary} />
         <Text mt="s" color="textLight" variant="caption">
-          Loading more books...
+          Loading more...
         </Text>
       </Box>
     ) : null;
@@ -104,11 +98,19 @@ export default function SearchScreen() {
         <Ionicons name="library" size={48} color={theme.colors.primary} />
       </Box>
       <Text variant="subheader" color="text" mb="s" textAlign="center">
-        Discover Amazing Books
+        Explore Books
       </Text>
       <Text color="textLight" textAlign="center" px="xl" lineHeight={22}>
-        Search through thousands of classic literature and find your next great
-        read 📚
+        Find your favorite book from thousands of classic literary works.📚
+      </Text>
+    </Box>
+  );
+
+  const renderInitialLoading = () => (
+    <Box flex={1} justifyContent="center" alignItems="center">
+      <ActivityIndicator size="large" color={theme.colors.primary} />
+      <Text mt="s" color="textLight">
+        searching for a book...
       </Text>
     </Box>
   );
@@ -119,7 +121,7 @@ export default function SearchScreen() {
         Search Books
       </Text>
       <Text color="textLight" variant="body" mb="l">
-        Explore our vast collection of literature
+        Explore thousands of classic literature books
       </Text>
     </Box>
   );
@@ -130,7 +132,7 @@ export default function SearchScreen() {
       <Box px="l" pt="l">
         {renderHeader()}
 
-        {/* Enhanced Search Bar */}
+        {/* Search Bar */}
         <Box
           backgroundColor="cardBackground"
           flexDirection="row"
@@ -168,7 +170,7 @@ export default function SearchScreen() {
           </Box>
 
           <TextInput
-            placeholder="Search for books, authors, genres..."
+            placeholder="Book, Writer, Search category..."
             placeholderTextColor={theme.colors.textLight}
             value={search}
             onChangeText={setSearch}
@@ -211,7 +213,9 @@ export default function SearchScreen() {
       <Box flex={1} px="l">
         {debouncedSearch.length === 0 ? (
           renderEmptyState()
-        ) : books.length === 0 && !isLoading ? (
+        ) : isLoading ? (
+          renderInitialLoading()
+        ) : books.length === 0 ? (
           <Box flex={1} justifyContent="center" alignItems="center" py="xxl">
             <Box
               width={100}
@@ -229,35 +233,33 @@ export default function SearchScreen() {
               />
             </Box>
             <Text variant="subheader" color="text" mb="s">
-              No books found
+              Found no books
             </Text>
             <Text color="textLight" textAlign="center" px="xl">
-              Try searching with different keywords or check your spelling
+              Try again different way
             </Text>
           </Box>
         ) : (
           <>
             {/* Results Header */}
-            {books.length > 0 && (
-              <Box
-                mb="m"
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Text color="textLight" variant="caption">
-                  Found{" "}
-                  {data?.pages[0]?.totalPages
-                    ? `${books.length}+ results`
-                    : `${books.length} results`}
+            <Box
+              mb="m"
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Text color="textLight" variant="caption">
+                পাওয়া গেছে{" "}
+                {data?.pages[0]?.totalPages
+                  ? `${books.length}+ result`
+                  : `${books.length} result`}
+              </Text>
+              <Box backgroundColor="primary" px="m" py="xs" borderRadius="s">
+                <Text color="background" variant="caption" fontWeight="600">
+                  {debouncedSearch}
                 </Text>
-                <Box backgroundColor="primary" px="m" py="xs" borderRadius="s">
-                  <Text color="background" variant="caption" fontWeight="600">
-                    {debouncedSearch}
-                  </Text>
-                </Box>
               </Box>
-            )}
+            </Box>
 
             {/* Books Grid */}
             <FlatList
