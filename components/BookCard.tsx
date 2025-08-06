@@ -19,7 +19,7 @@ export const BookCard = ({
     <TouchableOpacity onPress={onPress} activeOpacity={0.85}>
       <Box
         backgroundColor="cardBackground"
-        borderRadius="xl"
+        borderRadius="l"
         padding="m"
         shadowColor="shadow"
         shadowOffset={{ width: 0, height: 4 }}
@@ -27,7 +27,7 @@ export const BookCard = ({
         shadowRadius={8}
         elevation={4}
         width={160}
-        height={280} // ✅ Fixed height for consistency
+        height={280}
         style={{ overflow: "hidden" }}
       >
         {/* Book Cover */}
