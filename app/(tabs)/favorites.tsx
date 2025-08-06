@@ -12,8 +12,8 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { Swipeable } from "react-native-gesture-handler";
 
 const fetchBook = async (id: number) => {
   const res = await axios.get(`https://gutendex.com/books/${id}`);
@@ -237,7 +237,7 @@ function FavoriteBookItem({
   if (!data) return null;
 
   return (
-    <Swipeable renderRightActions={renderRightActions}>
+    <View style={{ flex: 1 }}>
       <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
         <Box
           backgroundColor="cardBackground"
@@ -378,6 +378,6 @@ function FavoriteBookItem({
           </Box>
         </Box>
       </TouchableOpacity>
-    </Swipeable>
+    </View>
   );
 }
