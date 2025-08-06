@@ -5,6 +5,7 @@ import axios from "axios";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import { ActivityIndicator, FlatList, TextInput } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { BookCard } from "@/components/BookCard";
 import { Box } from "@/components/ui/Box";
@@ -127,161 +128,164 @@ export default function SearchScreen() {
   );
 
   return (
-    <Box flex={1} backgroundColor="background">
-      {/* Header Section */}
-      <Box px="l" pt="l">
-        {renderHeader()}
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <Box flex={1}>
+        {/* Header Section */}
+        <Box px="l" pt="l">
+          {renderHeader()}
 
-        {/* Search Bar */}
-        <Box
-          backgroundColor="cardBackground"
-          flexDirection="row"
-          alignItems="center"
-          borderRadius="xl"
-          paddingHorizontal="l"
-          py="m"
-          shadowColor="shadow"
-          shadowOffset={{ width: 0, height: 4 }}
-          shadowOpacity={0.12}
-          shadowRadius={8}
-          elevation={4}
-          mb="l"
-          borderWidth={1}
-          borderColor={search.length > 0 ? "primary" : "text"}
-        >
+          {/* Search Bar */}
           <Box
-            width={40}
-            height={40}
-            borderRadius="m"
-            backgroundColor={search.length > 0 ? "primary" : "background"}
-            justifyContent="center"
+            backgroundColor="cardBackground"
+            flexDirection="row"
             alignItems="center"
-            mr="m"
+            borderRadius="xl"
+            paddingHorizontal="l"
+            py="m"
+            shadowColor="shadow"
+            shadowOffset={{ width: 0, height: 4 }}
+            shadowOpacity={0.12}
+            shadowRadius={8}
+            elevation={4}
+            mb="l"
+            borderWidth={1}
+            borderColor={search.length > 0 ? "primary" : "text"}
           >
-            <Ionicons
-              name="search"
-              size={20}
-              color={
-                search.length > 0
-                  ? theme.colors.background
-                  : theme.colors.iconGray
-              }
-            />
-          </Box>
-
-          <TextInput
-            placeholder="Book, Writer, Search category..."
-            placeholderTextColor={theme.colors.textLight}
-            value={search}
-            onChangeText={setSearch}
-            style={{
-              flex: 1,
-              paddingVertical: 12,
-              color: theme.colors.text,
-              fontSize: 16,
-              fontWeight: "500",
-              borderWidth: 0,
-              borderColor: "transparent",
-              outlineStyle: "none",
-            }}
-          />
-
-          {isLoading && (
-            <Box ml="m">
-              <ActivityIndicator size="small" color={theme.colors.primary} />
-            </Box>
-          )}
-
-          {search.length > 0 && !isLoading && (
             <Box
-              ml="m"
-              width={32}
-              height={32}
-              borderRadius="s"
-              backgroundColor="background"
+              width={40}
+              height={40}
+              borderRadius="m"
+              backgroundColor={search.length > 0 ? "primary" : "background"}
               justifyContent="center"
               alignItems="center"
-              onTouchEnd={() => setSearch("")}
-            >
-              <Ionicons name="close" size={16} color={theme.colors.iconGray} />
-            </Box>
-          )}
-        </Box>
-      </Box>
-
-      {/* Content Section */}
-      <Box flex={1} px="l">
-        {debouncedSearch.length === 0 ? (
-          renderEmptyState()
-        ) : isLoading ? (
-          renderInitialLoading()
-        ) : books.length === 0 ? (
-          <Box flex={1} justifyContent="center" alignItems="center" py="xxl">
-            <Box
-              width={100}
-              height={100}
-              borderRadius="xl"
-              backgroundColor="cardBackground"
-              justifyContent="center"
-              alignItems="center"
-              mb="l"
+              mr="m"
             >
               <Ionicons
                 name="search"
-                size={40}
-                color={theme.colors.textLight}
+                size={20}
+                color={
+                  search.length > 0
+                    ? theme.colors.background
+                    : theme.colors.iconGray
+                }
               />
             </Box>
-            <Text variant="subheader" color="text" mb="s">
-              Found no books
-            </Text>
-            <Text color="textLight" textAlign="center" px="xl">
-              Try again different way
-            </Text>
-          </Box>
-        ) : (
-          <>
-            {/* Results Header */}
-            <Box
-              mb="m"
-              flexDirection="row"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Text color="textLight" variant="caption">
-                Find book
-                {data?.pages[0]?.totalPages
-                  ? `${books.length}+ result`
-                  : `${books.length} result`}
-              </Text>
-              <Box backgroundColor="primary" px="m" py="xs" borderRadius="s">
-                <Text color="background" variant="caption" fontWeight="600">
-                  {debouncedSearch}
-                </Text>
-              </Box>
-            </Box>
 
-            {/* Books Grid */}
-            <FlatList
-              data={books}
-              renderItem={renderBook}
-              keyExtractor={(item) => item.id.toString()}
-              onEndReached={handleLoadMore}
-              onEndReachedThreshold={0.7}
-              ListFooterComponent={renderFooter}
-              numColumns={2}
-              columnWrapperStyle={{
-                justifyContent: "space-between",
-                paddingBottom: 8,
-              }}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingBottom: 100,
+            <TextInput
+              placeholder="Book, Writer, Search category..."
+              placeholderTextColor={theme.colors.textLight}
+              value={search}
+              onChangeText={setSearch}
+              style={{
+                flex: 1,
+                paddingVertical: 12,
+                color: theme.colors.text,
+                fontSize: 16,
+                fontWeight: "500",
               }}
             />
-          </>
-        )}
+
+            {isLoading && (
+              <Box ml="m">
+                <ActivityIndicator size="small" color={theme.colors.primary} />
+              </Box>
+            )}
+
+            {search.length > 0 && !isLoading && (
+              <Box
+                ml="m"
+                width={32}
+                height={32}
+                borderRadius="s"
+                backgroundColor="background"
+                justifyContent="center"
+                alignItems="center"
+                onTouchEnd={() => setSearch("")}
+              >
+                <Ionicons
+                  name="close"
+                  size={16}
+                  color={theme.colors.iconGray}
+                />
+              </Box>
+            )}
+          </Box>
+        </Box>
+
+        {/* Content Section */}
+        <Box flex={1} px="l">
+          {debouncedSearch.length === 0 ? (
+            renderEmptyState()
+          ) : isLoading ? (
+            renderInitialLoading()
+          ) : books.length === 0 ? (
+            <Box flex={1} justifyContent="center" alignItems="center" py="xxl">
+              <Box
+                width={100}
+                height={100}
+                borderRadius="xl"
+                backgroundColor="cardBackground"
+                justifyContent="center"
+                alignItems="center"
+                mb="l"
+              >
+                <Ionicons
+                  name="search"
+                  size={40}
+                  color={theme.colors.textLight}
+                />
+              </Box>
+              <Text variant="subheader" color="text" mb="s">
+                Found no books
+              </Text>
+              <Text color="textLight" textAlign="center" px="xl">
+                Try again different way
+              </Text>
+            </Box>
+          ) : (
+            <>
+              {/* Results Header */}
+              <Box
+                mb="m"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Text color="textLight" variant="caption">
+                  Find book{" "}
+                  {data?.pages[0]?.totalPages
+                    ? `${books.length}+ result`
+                    : `${books.length} result`}
+                </Text>
+                <Box backgroundColor="primary" px="m" py="xs" borderRadius="s">
+                  <Text color="background" variant="caption" fontWeight="600">
+                    {debouncedSearch}
+                  </Text>
+                </Box>
+              </Box>
+
+              {/* Books Grid */}
+              <FlatList
+                data={books}
+                renderItem={renderBook}
+                keyExtractor={(item) => item.id.toString()}
+                onEndReached={handleLoadMore}
+                onEndReachedThreshold={0.7}
+                ListFooterComponent={renderFooter}
+                numColumns={2}
+                columnWrapperStyle={{
+                  justifyContent: "space-between",
+                  paddingBottom: 8,
+                }}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                  paddingBottom: 100,
+                }}
+              />
+            </>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </SafeAreaView>
   );
 }

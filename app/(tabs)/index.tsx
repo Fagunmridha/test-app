@@ -12,6 +12,7 @@ import axios from "axios";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import { ActivityIndicator, FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type Book = {
   id: number;
@@ -189,28 +190,36 @@ export default function HomeScreen() {
   );
 
   return (
-    <FlatList
-      style={{ flex: 1, backgroundColor: theme.colors.background }}
-      data={books}
-      keyExtractor={(item) => item.id.toString()}
-      numColumns={2}
-      columnWrapperStyle={{
-        justifyContent: "space-between",
-        paddingHorizontal: theme.spacing.m,
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+        paddingTop: theme.spacing.m,
       }}
-      renderItem={({ item }) => (
-        <Box width={"48%"} mb="m">
-          <BookCard
-            book={item}
-            onPress={() => router.push(`/books/${item.id}`)}
-          />
-        </Box>
-      )}
-      ListHeaderComponent={renderHeader}
-      ListFooterComponent={renderFooter}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.5}
-      showsVerticalScrollIndicator={false}
-    />
+    >
+      <FlatList
+        style={{ flex: 1, backgroundColor: theme.colors.background }}
+        data={books}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          paddingHorizontal: theme.spacing.m,
+        }}
+        renderItem={({ item }) => (
+          <Box width={"48%"} mb="m">
+            <BookCard
+              book={item}
+              onPress={() => router.push(`/books/${item.id}`)}
+            />
+          </Box>
+        )}
+        ListHeaderComponent={renderHeader}
+        ListFooterComponent={renderFooter}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        showsVerticalScrollIndicator={false}
+      />
+    </SafeAreaView>
   );
 }

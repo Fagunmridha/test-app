@@ -109,7 +109,7 @@ export default function FavoritesScreen() {
 
   return (
     <Box flex={1} backgroundColor="background">
-      <Box px="l" pt="l">
+      <Box px="l" pt="xxl">
         {renderHeader()}
       </Box>
 
